@@ -1,0 +1,194 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: #f5f7fb;
+    color: #333;
+    transition: 0.3s ease;
+}
+
+/* Dark Mode */
+body.light-mode {
+    background: #1e1e2f;
+    color: white;
+}
+
+.title {
+    text-align: center;
+    padding: 20px;
+    font-weight: 600;
+}
+
+/* Small Toggle Button */
+.theme-toggle {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.theme-toggle button {
+    width: auto;
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: none;
+    background: #4c6ef5;
+    color: white;
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.theme-toggle button:hover {
+    background: #364fc7;
+}
+
+/* Layout */
+.dashboard {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+}
+
+/* Panels */
+.left-panel,
+.right-panel {
+    flex: 1;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+/* Summary Cards */
+.summary {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.card {
+    flex: 1;
+    padding: 15px;
+    border-radius: 10px;
+    background: #f1f3f5;
+    text-align: center;
+    font-weight: 500;
+}
+
+.balance-card {
+    border-left: 4px solid #4c6ef5;
+}
+
+.income-card {
+    border-left: 4px solid #40c057;
+}
+
+.expense-card {
+    border-left: 4px solid #fa5252;
+}
+
+/* Form */
+input, select {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+.form-section button {
+    width: 100%;
+    margin-top: 10px;
+}
+
+button {
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    background: #4c6ef5;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+button:hover {
+    background: #364fc7;
+}
+
+/* Transactions */
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    display: flex;
+    justify-content: space-between;
+    margin: 8px 0;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.delete-btn {
+    background: #fa5252;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: none;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.delete-btn:hover {
+    background: #c92a2a;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .dashboard {
+        flex-direction: column;
+    }
+
+    .summary {
+        flex-direction: column;
+    }
+}
+/* DARK MODE FULL FIX */
+
+body.light-mode .left-panel,
+body.light-mode .right-panel {
+    background: #2b2b3d;
+    color: white;
+}
+
+body.light-mode .card {
+    background: #343454;
+    color: white;
+}
+
+body.light-mode li {
+    background: #3a3a5a;
+    color: white;
+}
+
+body.light-mode input,
+body.light-mode select {
+    background: #3a3a5a;
+    color: white;
+    border: 1px solid #555;
+}
+
+body.light-mode input::placeholder {
+    color: #ccc;
+}
+
+body.light-mode .delete-btn {
+    background: #ff6b6b;
+}
+
+body.light-mode .delete-btn:hover {
+    background: #ff4d4d;
+}
