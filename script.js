@@ -1,16 +1,19 @@
 let transactions = [];
 let chart;
 
+// Auto set today's date
+document.getElementById("date").valueAsDate = new Date();
+
 function addTransaction() {
 
     let description = document.getElementById("description").value;
     let amount = parseFloat(document.getElementById("amount").value);
     let type = document.getElementById("type").value;
     let category = document.getElementById("category").value;
-    let date = new Date().toISOString().slice(0,7);
+    let date = document.getElementById("date").value;
 
-    if(description === "" || isNaN(amount)) {
-        alert("Enter valid details");
+    if(description === "" || isNaN(amount) || date === "") {
+        alert("Please enter valid details");
         return;
     }
 
@@ -25,6 +28,9 @@ function addTransaction() {
 
     saveData();
     updateUI();
+
+    document.getElementById("description").value = "";
+    document.getElementById("amount").value = "";
 }
 
 function updateUI() {
@@ -37,35 +43,37 @@ function updateUI() {
     let expense = 0;
     let categoryTotals = {};
 
+    transactions.sort((a, b) => b.id - a.id);
+
     transactions.forEach(t => {
 
         let li = document.createElement("li");
 
         li.innerHTML = `
-    <div>
-        <strong>${t.description}</strong> 
-        <br>
-        <small>${t.category}</small>
-    </div>
-    <div>
-        ₹${t.amount}
-        <br>
-        <button onclick="deleteTransaction(${t.id})" class="delete-btn">
-            Delete Transaction
-        </button>
-    </div>
-`;
+            <div>
+                <strong>${t.description}</strong><br>
+                <small>${t.category}</small><br>
+                <small>${t.date}</small>
+            </div>
+            <div>
+                ${t.type === "income" ? "+" : "-"} ₹${t.amount}
+                <br>
+                <button onclick="deleteTransaction(${t.id})" class="delete-btn">
+                    Delete
+                </button>
+            </div>
+        `;
 
         list.appendChild(li);
 
         if(t.type === "income") {
             income += t.amount;
             balance += t.amount;
-        } else {
+        } else if(t.type === "expense") {
             expense += t.amount;
             balance -= t.amount;
 
-            categoryTotals[t.category] = 
+            categoryTotals[t.category] =
                 (categoryTotals[t.category] || 0) + t.amount;
         }
     });
@@ -83,6 +91,8 @@ function updateChart(categoryTotals) {
 
     if(chart) chart.destroy();
 
+    if(Object.keys(categoryTotals).length === 0) return;
+
     chart = new Chart(ctx, {
         type: "pie",
         data: {
@@ -97,18 +107,16 @@ function updateChart(categoryTotals) {
                     "#9966ff"
                 ]
             }]
-        },
-        options: {
-            animation: {
-                animateRotate: true,
-                duration: 1000
-            }
         }
     });
 }
 
 function deleteTransaction(id) {
+
+    if(!confirm("Delete this transaction?")) return;
+
     transactions = transactions.filter(t => t.id !== id);
+
     saveData();
     updateUI();
 }
@@ -126,12 +134,7 @@ function loadData() {
 }
 
 function toggleTheme() {
-    document.body.classList.toggle("light-mode");
-
-    const btn = document.querySelector(".theme-toggle button");
-    btn.textContent = document.body.classList.contains("light-mode")
-        ? "☀ Light Mode"
-        : "🌙 Dark Mode";
+    document.body.classList.toggle("dark-mode");
 }
 
 loadData();
