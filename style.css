@@ -1,3 +1,12 @@
+:root {
+    --card-bg: #f1f3f5;
+    --text-color: #333;
+}
+
+body.dark-mode .card {
+    background: #e0e0e0 !important;
+}
+
 * {
     box-sizing: border-box;
 }
@@ -50,10 +59,7 @@ body.dark-mode {
     box-shadow: 0 5px 15px rgba(0,0,0,0.05);
 }
 
-body.dark-mode .left-panel,
-body.dark-mode .right-panel {
-    background: #2b2b3d;
-}
+
 
 .summary {
     display: flex;
@@ -122,4 +128,18 @@ li {
     .summary {
         flex-direction: column;
     }
+}
+
+
+/* 🔥 FINAL FIX — USE SAME PROPERTY */
+
+body.dark-mode .card {
+    background: #2f2f45 !important;
+}
+
+/* 🔥 FINAL TEXT FIX */
+
+.card h3,
+.card p {
+    color: #000 !important;
 }
