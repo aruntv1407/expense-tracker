@@ -1,101 +1,149 @@
-:root {
-    --card-bg: #f1f3f5;
-    --text-color: #333;
-}
-
-body.dark-mode .card {
-    background: #e0e0e0 !important;
-}
-
+/* RESET */
 * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
+/* VARIABLES */
+:root {
+    --bg-light: #f5f7fb;
+    --bg-dark: #1e1e2f;
+
+    --panel-light: #ffffff;
+    --panel-dark: #2b2b3d;
+
+    --card-light: #f1f3f5;
+    --card-dark: #e6e6e6;
+
+    --text-dark: #111;
+    --text-light: #ffffff;
+
+    --primary: #4c6ef5;
+    --success: #40c057;
+    --danger: #fa5252;
+}
+
+/* BODY */
 body {
-    margin: 0;
     font-family: 'Inter', sans-serif;
-    background: #f5f7fb;
-    color: #333;
-    transition: 0.3s ease;
+    background: var(--bg-light);
+    color: var(--text-dark);
+    transition: all 0.3s ease;
 }
 
 body.dark-mode {
-    background: #1e1e2f;
-    color: white;
+    background: var(--bg-dark);
+    color: var(--text-light);
 }
 
+/* TITLE */
 .title {
     text-align: center;
     padding: 20px;
+    font-weight: 600;
 }
 
+/* TOGGLE */
 .theme-toggle {
     text-align: center;
     margin-bottom: 15px;
 }
 
 .theme-toggle button {
-    width: auto;
     padding: 6px 14px;
     border-radius: 20px;
     border: none;
-    background: #4c6ef5;
+    background: var(--primary);
     color: white;
     cursor: pointer;
+    font-size: 13px;
 }
 
+/* LAYOUT */
 .dashboard {
     display: flex;
     gap: 20px;
     padding: 20px;
 }
 
+/* PANELS */
 .left-panel,
 .right-panel {
     flex: 1;
-    background: white;
+    background: var(--panel-light);
     padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    border-radius: 14px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.05);
 }
 
+body.dark-mode .left-panel,
+body.dark-mode .right-panel {
+    background: var(--panel-dark);
+}
 
-
+/* SUMMARY */
 .summary {
     display: flex;
-    gap: 10px;
+    gap: 12px;
     margin-bottom: 20px;
 }
 
+/* CARDS */
 .card {
     flex: 1;
-    padding: 15px;
-    border-radius: 10px;
-    background: #f1f3f5;
+    padding: 16px;
+    border-radius: 12px;
+    background: var(--card-light);
     text-align: center;
+    transition: 0.2s ease;
 }
 
-.balance-card { border-left: 4px solid #4c6ef5; }
-.income-card { border-left: 4px solid #40c057; }
-.expense-card { border-left: 4px solid #fa5252; }
+/* DARK MODE CARDS (LIGHT STYLE) */
+body.dark-mode .card {
+    background: var(--card-dark);
+}
 
+/* CARD TEXT ALWAYS BLACK */
+.card h3 {
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.card p {
+    font-size: 18px;
+    font-weight: 600;
+    color: #000;
+}
+
+/* ACCENTS */
+.balance-card { border-left: 4px solid var(--primary); }
+.income-card { border-left: 4px solid var(--success); }
+.expense-card { border-left: 4px solid var(--danger); }
+
+/* FORM */
 input, select {
     width: 100%;
     padding: 10px;
     margin: 8px 0;
     border-radius: 8px;
     border: 1px solid #dee2e6;
+    font-size: 14px;
 }
 
 button {
+    width: 100%;
     padding: 10px;
     border-radius: 8px;
     border: none;
-    background: #4c6ef5;
+    background: var(--primary);
     color: white;
     cursor: pointer;
+    font-weight: 500;
 }
 
+/* TRANSACTIONS */
 ul {
     list-style: none;
     padding: 0;
@@ -108,18 +156,25 @@ li {
     padding: 10px;
     background: #f8f9fa;
     border-radius: 8px;
+    font-size: 14px;
 }
 
+body.dark-mode li {
+    background: #3a3a5a;
+    color: white;
+}
+
+/* DELETE BUTTON */
 .delete-btn {
-    background: #fa5252;
+    background: var(--danger);
     color: white;
     padding: 4px 8px;
     border-radius: 6px;
-    border: none;
     font-size: 12px;
     cursor: pointer;
 }
 
+/* RESPONSIVE */
 @media (max-width: 768px) {
     .dashboard {
         flex-direction: column;
@@ -128,18 +183,4 @@ li {
     .summary {
         flex-direction: column;
     }
-}
-
-
-/* 🔥 FINAL FIX — USE SAME PROPERTY */
-
-body.dark-mode .card {
-    background: #2f2f45 !important;
-}
-
-/* 🔥 FINAL TEXT FIX */
-.card h3,
-.card p {
-    color: #000 !important;
-    opacity: 1 !important;
 }
