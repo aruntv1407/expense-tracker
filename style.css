@@ -138,8 +138,8 @@ body.dark-mode .card {
 }
 
 /* 🔥 FINAL TEXT FIX */
-
 .card h3,
 .card p {
     color: #000 !important;
+    opacity: 1 !important;
 }
