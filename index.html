@@ -1,91 +1,252 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Expense Tracker Pro</title>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Expense Tracker Pro — Track income, expenses, and budgets with beautiful charts and smart filtering. Built by Arun T V.">
+    <title>Expense Tracker Pro | Smart Finance Dashboard</title>
 
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons (lightweight) -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <!-- CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h1 class="title"> Expense Tracker</h1>
-
-<div class="theme-toggle">
-    <button onclick="toggleTheme()">🌙 Dark Mode</button>
-</div>
-
-<div class="dashboard">
-
-    <!-- LEFT PANEL -->
-    <div class="left-panel">
-
-        <div class="summary">
-            <div class="card balance-card">
-                <h3>Balance</h3>
-                <p>₹ <span id="balance">0</span></p>
+    <!-- ═══ HEADER ═══ -->
+    <header class="app-header">
+        <div class="header-left">
+            <div class="logo-icon" aria-hidden="true">
+                <i data-lucide="wallet"></i>
             </div>
+            <h1>Expense Tracker <span class="pro-badge">PRO</span></h1>
+        </div>
+        <div class="header-right">
+            <button id="themeToggleBtn" class="icon-btn" aria-label="Toggle dark mode" title="Toggle theme">
+                <i data-lucide="moon" id="themeIcon"></i>
+            </button>
+            <button id="exportCsvBtn" class="icon-btn" aria-label="Export as CSV" title="Export CSV">
+                <i data-lucide="download"></i>
+            </button>
+        </div>
+    </header>
 
-            <div class="card income-card">
-                <h3>Income</h3>
-                <p>₹ <span id="income">0</span></p>
+    <!-- ═══ SUMMARY CARDS ═══ -->
+    <section class="summary-strip" aria-label="Financial Summary">
+        <div class="summary-card balance-card" id="balanceCard">
+            <div class="summary-card-icon">
+                <i data-lucide="landmark"></i>
             </div>
-
-            <div class="card expense-card">
-                <h3>Expense</h3>
-                <p>₹ <span id="expense">0</span></p>
+            <div class="summary-card-info">
+                <span class="summary-label">Balance</span>
+                <span class="summary-value" id="balance">₹0</span>
             </div>
         </div>
-
-        <div class="form-section">
-            <h2>Add Transaction</h2>
-
-            <input type="text" id="description" placeholder="Description">
-            <input type="number" id="amount" placeholder="Amount">
-
-            <select id="type">
-                <option value="income">Income</option>
-                <option value="expense">Expense</option>
-            </select>
-
-            <select id="category">
-                <option value="Food">Food</option>
-                <option value="Transport">Transport</option>
-                <option value="Shopping">Shopping</option>
-                <option value="Bills">Bills</option>
-                <option value="Other">Other</option>
-            </select>
-
-            <input type="date" id="date">
-
-            <button onclick="addTransaction()">Add Transaction</button>
+        <div class="summary-card income-card" id="incomeCard">
+            <div class="summary-card-icon">
+                <i data-lucide="trending-up"></i>
+            </div>
+            <div class="summary-card-info">
+                <span class="summary-label">Income</span>
+                <span class="summary-value" id="income">₹0</span>
+            </div>
         </div>
+        <div class="summary-card expense-card" id="expenseCard">
+            <div class="summary-card-icon">
+                <i data-lucide="trending-down"></i>
+            </div>
+            <div class="summary-card-info">
+                <span class="summary-label">Expenses</span>
+                <span class="summary-value" id="expense">₹0</span>
+            </div>
+        </div>
+        <div class="summary-card count-card" id="countCard">
+            <div class="summary-card-icon">
+                <i data-lucide="receipt"></i>
+            </div>
+            <div class="summary-card-info">
+                <span class="summary-label">Transactions</span>
+                <span class="summary-value" id="txnCount">0</span>
+            </div>
+        </div>
+    </section>
 
+    <!-- ═══ MAIN DASHBOARD ═══ -->
+    <main class="dashboard">
+
+        <!-- ──── LEFT COLUMN ──── -->
+        <section class="panel left-panel" aria-label="Add Transaction">
+            <h2 class="panel-title">
+                <i data-lucide="plus-circle"></i>
+                Add Transaction
+            </h2>
+
+            <form id="transactionForm" class="txn-form" novalidate>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <input type="text" id="description" placeholder="e.g. Grocery shopping" required maxlength="60" autocomplete="off">
+                    <span class="field-error" id="descError"></span>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="amount">Amount (₹)</label>
+                        <input type="number" id="amount" placeholder="0.00" min="0.01" step="0.01" required>
+                        <span class="field-error" id="amtError"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="type">Type</label>
+                        <select id="type">
+                            <option value="expense">Expense</option>
+                            <option value="income">Income</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="category">Category</label>
+                        <select id="category">
+                            <!-- Populated by JS based on type -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="date">Date</label>
+                        <input type="date" id="date" required>
+                        <span class="field-error" id="dateError"></span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary" id="submitBtn">
+                    <i data-lucide="plus"></i>
+                    Add Transaction
+                </button>
+            </form>
+
+            <!-- ──── CHARTS ──── -->
+            <div class="charts-section">
+                <h2 class="panel-title">
+                    <i data-lucide="pie-chart"></i>
+                    Expense Breakdown
+                </h2>
+                <div class="chart-container">
+                    <canvas id="expenseChart"></canvas>
+                    <p class="chart-empty" id="pieEmpty">No expense data yet</p>
+                </div>
+
+                <h2 class="panel-title" style="margin-top:28px;">
+                    <i data-lucide="bar-chart-3"></i>
+                    Monthly Trends
+                </h2>
+                <div class="chart-container chart-bar-container">
+                    <canvas id="monthlyChart"></canvas>
+                    <p class="chart-empty" id="barEmpty">No data to display</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ──── RIGHT COLUMN ──── -->
+        <section class="panel right-panel" aria-label="Transactions">
+            <div class="panel-header-row">
+                <h2 class="panel-title">
+                    <i data-lucide="list"></i>
+                    Transactions
+                </h2>
+                <button class="btn-outline btn-sm" id="clearAllBtn" title="Clear all transactions">
+                    <i data-lucide="trash-2"></i> Clear All
+                </button>
+            </div>
+
+            <!-- Search & Filter -->
+            <div class="filter-bar">
+                <div class="search-box">
+                    <i data-lucide="search" class="search-icon"></i>
+                    <input type="text" id="searchInput" placeholder="Search transactions..." autocomplete="off">
+                </div>
+                <select id="filterType" class="filter-select">
+                    <option value="all">All Types</option>
+                    <option value="income">Income</option>
+                    <option value="expense">Expense</option>
+                </select>
+                <select id="filterCategory" class="filter-select">
+                    <option value="all">All Categories</option>
+                </select>
+                <select id="sortOrder" class="filter-select">
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                    <option value="highest">Highest Amount</option>
+                    <option value="lowest">Lowest Amount</option>
+                </select>
+            </div>
+
+            <ul id="transactionList" class="txn-list"></ul>
+            <p class="list-empty" id="listEmpty">
+                <i data-lucide="inbox"></i>
+                <span>No transactions yet. Add one to get started!</span>
+            </p>
+        </section>
+    </main>
+
+    <!-- ═══ EDIT MODAL ═══ -->
+    <div class="modal-overlay" id="editModal" role="dialog" aria-modal="true" aria-label="Edit Transaction">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i data-lucide="pencil"></i> Edit Transaction</h3>
+                <button class="modal-close" id="modalCloseBtn" aria-label="Close">&times;</button>
+            </div>
+            <form id="editForm" novalidate>
+                <input type="hidden" id="editId">
+                <div class="form-group">
+                    <label for="editDescription">Description</label>
+                    <input type="text" id="editDescription" required maxlength="60">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editAmount">Amount (₹)</label>
+                        <input type="number" id="editAmount" min="0.01" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editType">Type</label>
+                        <select id="editType">
+                            <option value="expense">Expense</option>
+                            <option value="income">Income</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editCategory">Category</label>
+                        <select id="editCategory"></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editDate">Date</label>
+                        <input type="date" id="editDate" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary">
+                    <i data-lucide="check"></i> Save Changes
+                </button>
+            </form>
+        </div>
     </div>
 
-    <!-- RIGHT PANEL -->
-    <div class="right-panel">
-        <h2>Transactions</h2>
-        <ul id="transactionList"></ul>
+    <!-- ═══ TOAST ═══ -->
+    <div id="toastContainer" class="toast-container" aria-live="polite"></div>
 
-        <h2>Expense Breakdown</h2>
-        <canvas id="expenseChart"></canvas>
-    </div>
+    <!-- ═══ FOOTER ═══ -->
+    <footer class="app-footer">
+        <p>Built with ❤️ by <strong>Arun T V</strong></p>
+    </footer>
 
-</div>
-
-<footer>
-    Built with ❤️ by Arun T V
-</footer>
-
-<!-- Chart.js FIRST -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<!-- Your JS -->
-<script src="script.js"></script>
+    <!-- Main Script -->
+    <script src="script.js"></script>
 
 </body>
 </html>
