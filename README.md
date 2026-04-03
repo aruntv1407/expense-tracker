@@ -2,6 +2,8 @@
 
 A modern, feature-rich personal finance dashboard built to elegantly track your income, expenses, and overall budget. Seamlessly visualize your financial trends and stay on top of your money — all wrapped in a premium, responsive glassmorphism UI.
 
+**🌍 Live Demo:** [https://aruntv1407.github.io/expense-tracker/](https://aruntv1407.github.io/expense-tracker/)
+
 ## 🌟 Demo & Screenshots
 
 ### Dashboard Overview
